@@ -1,0 +1,8 @@
+
+'use strict';
+const PROFILE_KEY='stroiresurs_profile_v1';
+function getProfile(){const d={name:'Пользователь демонстрационной системы',role:'Специалист по снабжению',org:'Строительная организация',email:'user@example.ru',phone:''};try{return {...d,...JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}')}}catch(e){return d}}
+function openProfile(){const p=getProfile();['name','role','org','email','phone'].forEach(k=>{const el=document.getElementById('profile_'+k);if(el)el.value=p[k]||''});document.getElementById('profileBackdrop').classList.add('open');document.getElementById('profileBackdrop').setAttribute('aria-hidden','false')}
+function closeProfile(){const e=document.getElementById('profileBackdrop');e.classList.remove('open');e.setAttribute('aria-hidden','true')}
+function saveProfile(){const p={};['name','role','org','email','phone'].forEach(k=>p[k]=document.getElementById('profile_'+k).value.trim());if(!p.name){alert('Укажите имя пользователя.');return}try{localStorage.setItem(PROFILE_KEY,JSON.stringify(p));const label=document.getElementById('profileLabel');if(label)label.textContent=p.name;closeProfile();const t=document.getElementById('toast');if(t){t.textContent='Профиль сохранён на этом устройстве.';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}}catch(e){alert('Не удалось сохранить профиль в браузере.')}}
+document.addEventListener('DOMContentLoaded',()=>{const p=getProfile(),l=document.getElementById('profileLabel');if(l)l.textContent=p.name;const b=document.getElementById('profileBackdrop');if(b)b.addEventListener('click',e=>{if(e.target===b)closeProfile()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProfile()})});
